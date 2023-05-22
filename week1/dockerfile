@@ -1,0 +1,26 @@
+FROM ubuntu:latest
+
+# Install necessary packages
+RUN apt-get update && apt-get install -y \
+    wget \
+    git \
+    bzip2 \
+    docker.io \
+    docker-compose
+
+# Install Anaconda
+RUN wget https://repo.anaconda.com/archive/Anaconda3-2023.03-1-Linux-x86_64.sh \
+    && bash Anaconda3-2023.03-1-Linux-x86_64.sh -b \
+    && rm Anaconda3-2023.03-1-Linux-x86_64.sh
+
+# Set PATH to include Anaconda (change this to the path where Anaconda is installed)
+ENV PATH /root/anaconda3/bin:$PATH
+
+# Install Jupyter Notebook (you may not need this line if it's already included in your Anaconda distribution)
+RUN conda install -y jupyter
+
+# Expose port for Jupyter Notebook
+EXPOSE 8888
+
+# Start Jupyter Notebook
+CMD ["jupyter", "notebook", "--ip='*'", "--port=8888", "--no-browser", "--allow-root"]
